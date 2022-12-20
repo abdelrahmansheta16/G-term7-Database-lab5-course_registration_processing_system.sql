@@ -1,0 +1,190 @@
+1-
+SELECT student.student_name FROM student
+JOIN enrolled ON enrolled.student_id = student.student_id
+JOIN semester_course ON semester_course.course_code = enrolled.course_code
+WHERE semester_course.prof_id = 1
+AND student.level = "SR"
+GROUP BY student_name;
+
+student_name	
+Angela Martinez	
+Charles Harris	
+Maria White	
+
+2-
+SELECT student.student_name FROM student
+JOIN enrolled ON enrolled.student_id = student.student_id
+JOIN semester_course ON semester_course.course_code = enrolled.course_code
+WHERE student.major = "History"
+OR semester_course.prof_id IN (SELECT professor.prof_id FROM professor WHERE professor.prof_name = "Michael Miller")
+GROUP BY student_name
+ORDER BY age DESC LIMIT 1;
+
+
+Charles Harris
+
+3-
+
+SELECT student.student_name, course.name FROM student
+LEFT JOIN enrolled ON enrolled.student_id = student.student_id
+LEFT JOIN course ON course.course_code = enrolled.course_code
+ORDER BY student.student_name;
+
+student_name   	name	
+Angela Martinez	Data Structures	
+Charles Harris	Data Structures	
+Charles Harris	Database Systems	
+Charles Harris	Operating System Design	
+Charles Harris	Air Quality Engineering	
+Christopher Garcia	Operating System Design	
+Daniel Lee	Data Structures	
+Daniel Lee	Archaeology of the Incas	
+Daniel Lee	Air Quality Engineering	
+Daniel Lee	Introductory Latin	
+Daniel Lee	American Political Parties	
+Donald King	NULL	
+Dorthy Lewis	Data Structures	
+Dorthy Lewis	Database Systems	
+Dorthy Lewis	Aviation Accident Investigation	
+Dorthy Lewis	Air Quality Engineering	
+Dorthy Lewis	Introductory Latin	
+George Wright	NULL	
+Joseph Thompson	Data Structures	
+Joseph Thompson	American Political Parties	
+Joseph Thompson	Social Cognition	
+Juan Rodriguez	Data Structures	
+Juan Rodriguez	Archaeology of the Incas	
+Juan Rodriguez	Aviation Accident Investigation	
+Lisa Walker	Data Structures	
+Lisa Walker	Archaeology of the Incas	
+Lisa Walker	American Political Parties	
+Lisa Walker	Social Cognition	
+Luis Hernandez	Data Structures	
+Luis Hernandez	Data Structures	
+Luis Hernandez	Data Structures	
+Luis Hernandez	Database Systems	
+Luis Hernandez	Operating System Design	
+Luis Hernandez	Air Quality Engineering	
+Margaret Clark	Data Structures	
+Margaret Clark	Operating System Design	
+Margaret Clark	Archaeology of the Incas	
+Margaret Clark	Aviation Accident Investigation	
+Margaret Clark	Air Quality Engineering	
+Maria White	Data Structures	
+Maria White	Data Structures	
+Maria White	Archaeology of the Incas	
+Maria White	Aviation Accident Investigation	
+Mark Young	Data Structures	
+Mark Young	Database Systems	
+Mark Young	Operating System Design	
+Mark Young	Aviation Accident Investigation	
+Mark Young	Air Quality Engineering	
+Nancy Allen	Operating System Design	
+Nancy Allen	Aviation Accident Investigation	
+Paul Hall	Data Structures	
+Paul Hall	Operating System Design	
+Paul Hall	Social Cognition	
+Susan Martin	Database Systems	
+Susan Martin	Operating System Design	
+Susan Martin	Archaeology of the Incas	
+Thomas Robinson	Database Systems	
+Thomas Robinson	Introductory Latin	
+
+4-
+
+SELECT professor.prof_name, COUNT(semester_course.course_code) as courses FROM professor
+LEFT JOIN semester_course ON semester_course.prof_id = professor.prof_id
+GROUP BY semester_course.course_code
+HAVING courses < 5
+ORDER BY courses;
+
+prof_name	courses   	
+Robert Brown	0	
+John Williams	1	
+Ivana Teach	1	
+Mary Johnson	1	
+Ivana Teach	1	
+James Smith	1	
+Ivana Teach	2	
+Ivana Teach	2	
+Ivana Teach	2	
+Ivana Teach	2	
+Patricia Jones	3	
+
+5-
+SELECT student.student_name FROM student
+JOIN enrolled ON enrolled.student_id = student.student_id
+WHERE CONTAINS (enrolled.course_code,(SELECT semester_course.course_code FROM semester_course WHERE semester_course.prof_id = 2))
+GROUP BY student_name
+ORDER BY student.student_name;
+
+6-
+SELECT course.course_code FROM semester_course
+JOIN professor ON professor.prof_id = semester_course.prof_id
+JOIN department ON department.dept_id = professor.dept_id
+RIGHT JOIN course ON course.course_code = semester_course.course_code
+WHERE department.dept_name = "Computer Science"
+OR course.course_code NOT IN(SELECT course_code FROM semester_course);
+
+
+course_code	
+CC10	
+CC12	
+CC19	
+CC20	
+CC21	
+CC22	
+CC23	
+
+7-
+SELECT professor.prof_name FROM professor
+JOIN semester_course ON semester_course.prof_id = professor.prof_id
+WHERE professor.prof_name LIKE 'M%'
+GROUP BY semester_course.prof_id
+HAVING COUNT(semester_course.course_code) > 2;
+
+Michael Miller
+
+SELECT student.student_name FROM student
+WHERE student.student_name LIKE 'M%' AND student.age < 20;
+
+student_name	
+Margaret Clark	
+Mark Young	
+
+8-
+
+SELECT professor.prof_name FROM professor
+JOIN semester_course ON semester_course.prof_id = professor.prof_id
+WHERE professor.dept_id IN (1,2,3,4)
+GROUP BY semester_course.prof_id
+HAVING COUNT(semester_course.course_code) < 2;
+
+prof_name	
+Mary Johnson	
+Patricia Jones	
+9-
+10-
+
+SELECT course.name,semester_course.course_code, professor.prof_name,professor.prof_id FROM course
+JOIN semester_course ON semester_course.course_code = course.course_code
+JOIN professor ON professor.prof_id = semester_course.prof_id
+GROUP BY semester_course.course_code,professor.prof_id
+HAVING COUNT(semester_course.course_code) > 1;
+
+name	course_code	prof_name	prof_id	
+Data Structures	CC10	Ivana Teach	1	
+Operating System Design	CC12	Michael Miller	6	
+Air Quality Engineering	CC15	Ivana Teach	1	
+11-
+
+SELECT department.dept_name FROM department
+JOIN professor ON professor.dept_id = department.dept_id
+LEFT JOIN semester_course ON semester_course.prof_id = professor.prof_id
+GROUP BY department.dept_name
+HAVING COUNT(semester_course.course_code) < 3;
+
+dept_name	
+Arts	
+Electronics	
+	
