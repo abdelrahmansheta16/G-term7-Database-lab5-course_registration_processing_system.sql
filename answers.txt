@@ -112,11 +112,26 @@ Ivana Teach	2
 Patricia Jones	3	
 
 5-
-SELECT student.student_name FROM student
-JOIN enrolled ON enrolled.student_id = student.student_id
-WHERE CONTAINS (enrolled.course_code,(SELECT semester_course.course_code FROM semester_course WHERE semester_course.prof_id = 2))
-GROUP BY student_name
-ORDER BY student.student_name;
+SELECT s.student_name FROM student as s
+JOIN enrolled as e ON e.student_id = s.student_id
+WHERE e.course_code in (SELECT sem.course_code FROM semester_course as sem WHERE sem.prof_id = 2)
+GROUP BY s.student_name
+ORDER BY s.student_name;
+
+student_name   	
+Angela Martinez	
+Charles Harris	
+Daniel Lee	
+Dorthy Lewis	
+Joseph Thompson	
+Juan Rodriguez	
+Lisa Walker	
+Luis Hernandez	
+Margaret Clark	
+Maria White	
+Mark Young	
+Paul Hall	
+
 
 6-
 SELECT course.course_code FROM semester_course
